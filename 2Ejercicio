@@ -1,0 +1,54 @@
+
+from collections import deque
+
+class Grafo:
+    def __init__(self):
+        self.adyacencia = {}
+
+    def agregar_vertice(self, vertice):
+        if vertice not in self.adyacencia:
+            self.adyacencia[vertice] = []
+
+    def agregar_arista(self, origen, destino):
+        self.agregar_vertice(origen)
+        self.agregar_vertice(destino)
+
+        self.adyacencia[origen].append(destino)
+        self.adyacencia[destino].append(origen)
+
+    def es_conexo(self):
+        if not self.adyacencia:
+            return True
+
+        inicio = next(iter(self.adyacencia))
+        visitados = set()
+        cola = deque([inicio])
+        visitados.add(inicio)
+
+        while cola:
+            actual = cola.popleft()
+
+            for vecino in self.adyacencia[actual]:
+                if vecino not in visitados:
+                    visitados.add(vecino)
+                    cola.append(vecino)
+
+        return len(visitados) == len(self.adyacencia)
+
+    def mostrar(self):
+        for vertice, vecinos in self.adyacencia.items():
+            print(vertice, "->", vecinos)
+
+
+
+g = Grafo()
+
+
+g.agregar_arista("A", "B")
+g.agregar_arista("B", "C")
+g.agregar_arista("C", "D")
+
+print("Grafo:")
+g.mostrar()
+
+print("¿El grafo es conexo?", g.es_conexo())
